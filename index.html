@@ -1,0 +1,488 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Text Summarizer</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #fff7e8;
+            color: #222;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            width: 100%;
+            background: #ffffff;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #f47c20;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #444;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #f47c20;
+        }
+
+        .nav-btn {
+            background: #f47c20;
+            color: white !important;
+            padding: 9px 17px;
+            border-radius: 5px;
+        }
+
+        .nav-btn:hover {
+            background: #df6810;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        main {
+            min-height: calc(100vh - 145px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: #ffffff;
+            padding: 35px 45px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+
+        /* ================= HEADING ================= */
+
+        h1 {
+            text-align: center;
+            color: #f47c20;
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+
+        /* ================= TEXTAREA ================= */
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 15px;
+            border: 1px solid #cfcfcf;
+            border-radius: 5px;
+            resize: vertical;
+            font-size: 15px;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #f47c20;
+            box-shadow: 0 0 5px rgba(244, 124, 32, 0.25);
+        }
+
+        textarea::placeholder {
+            color: #999;
+        }
+
+
+        /* ================= BUTTON ================= */
+
+        button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: #f47c20;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #df6810;
+        }
+
+        button:disabled {
+            background: #f4a261;
+            cursor: not-allowed;
+        }
+
+
+        /* ================= RESULT ================= */
+
+        .result {
+            margin-top: 22px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .result-title {
+            background: #f47c20;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .summary {
+            padding: 18px;
+            min-height: 100px;
+            color: #333;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        .footer {
+            width: 100%;
+            background: #222;
+            color: #ddd;
+            padding: 22px 20px;
+            text-align: center;
+        }
+
+        .footer-title {
+            color: #f47c20;
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #bbb;
+        }
+
+        .footer-copy {
+            font-size: 12px;
+            color: #888;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .nav-btn {
+                padding: 7px 10px;
+            }
+
+            main {
+                padding: 25px 15px;
+            }
+
+            .container {
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            textarea {
+                height: 200px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            📝 TextSummarizer
+        </div>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="/">Home</a>
+            </li>
+
+            <li>
+                <a href="#about">About</a>
+            </li>
+
+            <li>
+                <a href="#summarizer" class="nav-btn">
+                    Summarizer
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main id="summarizer">
+
+        <div class="container">
+
+            <h1>Text Summarizer</h1>
+
+            <div class="subtitle">
+                using HuggingFace Transformer
+            </div>
+
+            <div class="description">
+                Write or Paste your content below for quick summarization.
+            </div>
+
+
+            <!-- Form -->
+
+            <form id="summarizeForm">
+
+                <textarea
+                    id="text"
+                    name="text"
+                    placeholder="Enter your content here..."
+                    required></textarea>
+
+                <button
+                    type="submit"
+                    id="summarizeBtn">
+                    Summarize
+                </button>
+
+            </form>
+
+
+            <!-- Summary Result -->
+
+            <div class="result">
+
+                <div class="result-title">
+                    Content Summary
+                </div>
+
+                <div class="summary" id="summary">
+
+                    {% if summary %}
+                        {{ summary }}
+                    {% else %}
+                        Your summary will appear here...
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer" id="about">
+
+        <div class="footer-title">
+            📝 TextSummarizer
+        </div>
+
+        <div class="footer-text">
+            AI-powered text summarization using HuggingFace T5 Transformer.
+        </div>
+
+        <div class="footer-copy">
+            © 2026 TextSummarizer. All rights reserved.
+        </div>
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        const form = document.getElementById("summarizeForm");
+
+        const textarea = document.getElementById("text");
+
+        const button = document.getElementById("summarizeBtn");
+
+        const summaryBox = document.getElementById("summary");
+
+
+        form.addEventListener("submit", async function(event) {
+
+            // Page reload hone se rokna
+            event.preventDefault();
+
+
+            const dialogue = textarea.value.trim();
+
+
+            // Empty text check
+            if (!dialogue) {
+
+                summaryBox.innerText =
+                    "Please enter some text first.";
+
+                return;
+            }
+
+
+            // Button loading state
+
+            button.disabled = true;
+
+            button.innerText = "Summarizing...";
+
+            summaryBox.innerText =
+                "AI is generating your summary...";
+
+
+            try {
+
+                // FastAPI ko request bhejna
+
+                const response = await fetch("/summarize/", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        dialogue: dialogue
+                    })
+
+                });
+
+
+                // Server error check
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Server error: " + response.status
+                    );
+
+                }
+
+
+                // FastAPI ka JSON response
+
+                const data = await response.json();
+
+
+                // Summary screen par show karna
+
+                summaryBox.innerText = data.summary;
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                summaryBox.innerText =
+                    "Something went wrong. Please try again.";
+
+            }
+
+
+            // Button normal state
+
+            button.disabled = false;
+
+            button.innerText = "Summarize";
+
+        });
+
+    </script>
+
+
+</body>
+
+</html>
